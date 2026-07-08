@@ -1,0 +1,14 @@
+# Dipendenze
+node_modules/
+
+# Cartelle di Build
+dist/
+
+# Archivi locali
+*.zip
+*.rar
+
+# File di sistema e IDE
+.vscode/
+.DS_Store
+Thumbs.db
