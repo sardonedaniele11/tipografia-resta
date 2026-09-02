@@ -3,6 +3,8 @@ node_modules/
 
 # Cartelle di Build
 dist/
+.next/
+out/
 
 # Archivi locali
 *.zip

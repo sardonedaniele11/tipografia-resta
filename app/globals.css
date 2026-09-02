@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --cmyk-cyan: #00e5ff;
+    --cmyk-magenta: #ff007f;
+    --cmyk-yellow: #ffe600;
+    --cmyk-key: #111111;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: #fcfbf9;
+    color: #111111;
+    font-family: var(--font-sans), system-ui, sans-serif;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: #00e5ff;
+    color: #111111;
+  }
+}
+
+/* Crop Marks Decorative Corners */
+.crop-mark {
+  position: fixed;
+  width: 20px;
+  height: 20px;
+  border-color: rgba(17, 17, 17, 0.25);
+  pointer-events: none;
+  z-index: 999;
+}
+.crop-top-left { top: 12px; left: 12px; border-top: 1px solid; border-left: 1px solid; }
+.crop-top-right { top: 12px; right: 12px; border-top: 1px solid; border-right: 1px solid; }
+.crop-bottom-left { bottom: 12px; left: 12px; border-bottom: 1px solid; border-left: 1px solid; }
+.crop-bottom-right { bottom: 12px; right: 12px; border-bottom: 1px solid; border-right: 1px solid; }
+
+/* Scroll Offset for WhatsApp Anchor */
+#contacts-whatsapp {
+  scroll-margin-top: 110px;
+}
