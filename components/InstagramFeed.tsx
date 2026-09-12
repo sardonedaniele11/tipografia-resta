@@ -140,10 +140,10 @@ export default function InstagramFeed() {
             <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-full border-2 border-cmyk-magenta p-1">
               <div className="relative h-full w-full overflow-hidden rounded-full">
                 <Image
-                  src="/assets/logo-resta.jpg"
-                  alt="Tipografia Resta"
+                  src="/assets/logo-square.jpg"
+                  alt="Nuova Tipolitografia Resta"
                   fill
-                  className="object-cover"
+                  className="object-contain bg-white p-1"
                 />
               </div>
             </div>
@@ -265,8 +265,8 @@ export default function InstagramFeed() {
             <div className="flex flex-1 flex-col justify-between border-t border-cmyk-key/10 p-6 md:border-l md:border-t-0">
               <div>
                 <div className="flex items-center gap-3">
-                  <div className="relative h-10 w-10 overflow-hidden rounded-full border border-cmyk-magenta">
-                    <Image src="/assets/logo-resta.jpg" alt="Logo" fill className="object-cover" />
+                  <div className="relative h-10 w-10 overflow-hidden rounded-full border border-cmyk-magenta bg-white p-0.5">
+                    <Image src="/assets/logo-square.jpg" alt="Logo" fill className="object-contain" />
                   </div>
                   <div>
                     <h4 className="text-sm font-bold text-cmyk-key">tipografiaresta</h4>

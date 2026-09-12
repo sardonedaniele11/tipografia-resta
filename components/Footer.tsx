@@ -11,8 +11,8 @@ export default function Footer() {
           
           {/* Col 1: Brand & Tagline */}
           <div>
-            <Link href="#hero" className="inline-block bg-paper-white p-2 border border-white/20">
-              <div className="relative h-12 w-36">
+            <Link href="#hero" className="inline-block bg-paper-white p-2 border border-white/20 shadow-sm">
+              <div className="relative h-14 w-44">
                 <Image
                   src="/assets/logo-resta.jpg"
                   alt="Nuova Tipolitografia Resta"
