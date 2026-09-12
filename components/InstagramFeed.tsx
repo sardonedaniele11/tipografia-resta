@@ -1,120 +1,229 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { Heart, MessageCircle, ExternalLink, X, Instagram } from "lucide-react";
+import { Heart, MessageCircle, ExternalLink, X, Instagram, RefreshCw } from "lucide-react";
 
-interface Post {
-  id: number;
+interface BeholdPost {
+  id: string;
+  caption?: string;
+  prunedCaption?: string;
+  permalink?: string;
+  timestamp?: string;
+  likeCount?: number;
+  commentsCount?: number;
+  mediaType?: string;
+  mediaUrl?: string;
+  sizes?: {
+    small?: { mediaUrl: string };
+    medium?: { mediaUrl: string };
+    large?: { mediaUrl: string };
+    full?: { mediaUrl: string };
+  };
+}
+
+interface PostItem {
+  id: string;
   src: string;
   alt: string;
   title: string;
+  caption: string;
   likes: number;
   comments: number;
+  permalink: string;
+  isLive?: boolean;
 }
 
 export default function InstagramFeed() {
-  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+  const [selectedPost, setSelectedPost] = useState<PostItem | null>(null);
+  const [livePosts, setLivePosts] = useState<PostItem[]>([]);
+  const [profileStats, setProfileStats] = useState({
+    username: "tipografiaresta",
+    followers: "417",
+    following: "404",
+  });
+  const [isLoading, setIsLoading] = useState(true);
 
-  const posts: Post[] = [
+  // Post di fallback con le foto reali locali
+  const fallbackPosts: PostItem[] = [
     {
-      id: 1,
+      id: "fb-1",
       src: "/assets/portfolio-cappellino.jpg",
       alt: "Cappellino personalizzato Eventi Esclusivi",
       title: "Stampa su Indumenti - Cappellino 'Eventi Esclusivi'",
+      caption: "Personalizzazione di abbigliamento ed accessori promozionali.",
       likes: 156,
       comments: 18,
+      permalink: "https://www.instagram.com/tipografiaresta/",
     },
     {
-      id: 2,
+      id: "fb-2",
       src: "/assets/portfolio-vetrina-cars.jpg",
       alt: "Vetrofania e insegna Old Cars Club Bari",
       title: "Vetrofanie & Insegne - Old Cars Club",
+      caption: "Allestimento vetrine e grafica adesiva per attività e club a Bari.",
       likes: 192,
       comments: 25,
+      permalink: "https://www.instagram.com/tipografiaresta/",
     },
     {
-      id: 3,
+      id: "fb-3",
       src: "/assets/portfolio-inviti-nastro.jpg",
       alt: "Inviti coordinati con nastro in organza",
       title: "Partecipazioni & Inviti Nuziali con nastro",
+      caption: "Coordinati nozze raffinati con carte pregiate e rifiniture artigianali.",
       likes: 204,
       comments: 19,
+      permalink: "https://www.instagram.com/tipografiaresta/",
     },
     {
-      id: 4,
+      id: "fb-4",
       src: "/assets/portfolio-sabbiatura-vetri.jpg",
       alt: "Sabbiatura vetri decorativa prima e dopo",
       title: "Sabbiatura Vetri Uffici - Prima & Dopo",
+      caption: "Pellicole satinate decorative per privacy ed eleganza negli uffici.",
       likes: 184,
       comments: 22,
+      permalink: "https://www.instagram.com/tipografiaresta/",
     },
     {
-      id: 5,
+      id: "fb-5",
       src: "/assets/portfolio-mezcla-legno.jpg",
       alt: "Logo Mezcla Monopoli stampato su legno",
       title: "Stampa UV su Legno - Logo Mezcla Monopoli",
+      caption: "Stampa diretta UV su supporti rigidi in legno naturale.",
       likes: 178,
       comments: 16,
+      permalink: "https://www.instagram.com/tipografiaresta/",
     },
     {
-      id: 6,
+      id: "fb-6",
       src: "/assets/portfolio-allestimento-fiere.jpg",
       alt: "Allestimento fiere stand sposi",
       title: "Allestimento Stand & Banner Fieristici",
+      caption: "Stampa grande formato e allestimento stand per fiere ed eventi.",
       likes: 165,
       comments: 14,
+      permalink: "https://www.instagram.com/tipografiaresta/",
     },
     {
-      id: 7,
+      id: "fb-7",
       src: "/assets/portfolio-insegna.jpg",
       alt: "Insegna ingresso ICASA",
       title: "Insegna Ingresso Grande Formato - ICASA",
+      caption: "Insegne e pannelli istituzionali resistenti agli agenti atmosferici.",
       likes: 124,
       comments: 8,
+      permalink: "https://www.instagram.com/tipografiaresta/",
     },
     {
-      id: 8,
+      id: "fb-8",
       src: "/assets/portfolio-satori-legno.jpg",
       alt: "Grafica SATORI stampata su pannello di legno",
       title: "Stampa Artistica su Pannello in Legno - Satori",
+      caption: "Dettaglio di precisione per stampe artistiche su legno.",
       likes: 132,
       comments: 11,
+      permalink: "https://www.instagram.com/tipografiaresta/",
     },
     {
-      id: 9,
+      id: "fb-9",
       src: "/assets/portfolio-businesscards.jpg",
       alt: "Biglietti da visita lamina oro",
       title: "Biglietti da Visita Nobilitati in Lamina Oro",
+      caption: "Nobilitazione con lamina metallizzata a caldo su cartoncino nero.",
       likes: 98,
       comments: 6,
+      permalink: "https://www.instagram.com/tipografiaresta/",
     },
     {
-      id: 10,
+      id: "fb-10",
       src: "/assets/portfolio-targa.jpg",
       alt: "Targa istituzionale su muro",
       title: "Targa Istituzionale Alluminio / Plexiglass",
+      caption: "Targhe professionali per studi medici, legali e uffici.",
       likes: 105,
       comments: 5,
+      permalink: "https://www.instagram.com/tipografiaresta/",
     },
     {
-      id: 11,
+      id: "fb-11",
       src: "/assets/portfolio-rollup.jpg",
       alt: "Rollup informativo autoportante",
       title: "Roll-up Espositivo e Banner Pubblicitario",
+      caption: "Espositori roll-up avvolgibili per eventi e fiere aziendali.",
       likes: 94,
       comments: 3,
+      permalink: "https://www.instagram.com/tipografiaresta/",
     },
     {
-      id: 12,
+      id: "fb-12",
       src: "/assets/portfolio-stampa-visione.jpg",
       alt: "Stampa che ti porta oltre, Stampiamo la tua visione",
       title: "In Evidenza: Stampa che ti porta oltre",
+      caption: "Stampiamo la tua visione. Idee, stampa e impatto a Bari.",
       likes: 245,
       comments: 31,
+      permalink: "https://www.instagram.com/tipografiaresta/",
     },
   ];
+
+  // Caricamento in tempo reale del Feed da Behold.so
+  useEffect(() => {
+    async function fetchInstagramFeed() {
+      try {
+        const response = await fetch("https://feeds.behold.so/MrBIspQ1YMnuJrA6uHdg");
+        if (!response.ok) throw new Error("Errore nel caricamento del feed");
+
+        const data = await response.json();
+
+        if (data && data.posts && Array.isArray(data.posts)) {
+          // Aggiorna le statistiche del profilo in tempo reale
+          setProfileStats({
+            username: data.username || "tipografiaresta",
+            followers: data.followersCount ? `${data.followersCount}` : "417",
+            following: data.followsCount ? `${data.followsCount}` : "404",
+          });
+
+          // Mappa i post live da Instagram
+          const formattedLivePosts: PostItem[] = data.posts.map((post: BeholdPost) => {
+            const firstLine = post.prunedCaption?.split("\n")[0] || post.caption?.split("\n")[0] || "Nuovo lavoro Tipografia Resta";
+            const imageUrl = post.sizes?.large?.mediaUrl || post.sizes?.medium?.mediaUrl || post.mediaUrl || "";
+
+            return {
+              id: post.id,
+              src: imageUrl,
+              alt: firstLine,
+              title: firstLine,
+              caption: post.prunedCaption || post.caption || "",
+              likes: post.likeCount || 0,
+              comments: post.commentsCount || 0,
+              permalink: post.permalink || "https://www.instagram.com/tipografiaresta/",
+              isLive: true,
+            };
+          });
+
+          // Se i post live sono meno di 12, completa la griglia con i migliori lavori d'archivio
+          if (formattedLivePosts.length < 12) {
+            const remainingCount = 12 - formattedLivePosts.length;
+            const combined = [...formattedLivePosts, ...fallbackPosts.slice(0, remainingCount)];
+            setLivePosts(combined);
+          } else {
+            setLivePosts(formattedLivePosts.slice(0, 12));
+          }
+        }
+      } catch (error) {
+        console.warn("Utilizzo post locali di fallback:", error);
+        setLivePosts(fallbackPosts);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchInstagramFeed();
+  }, []);
+
+  const displayPosts = livePosts.length > 0 ? livePosts : fallbackPosts;
 
   return (
     <section id="portfolio" className="border-b border-cmyk-key/10 bg-paper-white py-16 md:py-24">
@@ -122,10 +231,11 @@ export default function InstagramFeed() {
         
         {/* Section Header */}
         <div className="text-center">
-          <span className="font-mono text-xs font-bold uppercase tracking-widest text-cmyk-magenta">
-            // RIMANI SEMPRE AGGIORNATO
-          </span>
-          <h2 className="mt-2 font-serif text-3xl font-extrabold text-cmyk-key sm:text-4xl md:text-5xl">
+          <div className="inline-flex items-center gap-2 border border-cmyk-key/30 bg-paper-cream px-3 py-1 font-mono text-xs font-bold uppercase tracking-widest text-cmyk-magenta">
+            <span className="h-2 w-2 animate-pulse rounded-full bg-[#25d366]" />
+            <span>LIVE SYNC // RIMANI SEMPRE AGGIORNATO</span>
+          </div>
+          <h2 className="mt-3 font-serif text-3xl font-extrabold text-cmyk-key sm:text-4xl md:text-5xl">
             Lavori Recenti su Instagram
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-base text-cmyk-key/75">
@@ -137,7 +247,7 @@ export default function InstagramFeed() {
         <div className="mx-auto mt-10 max-w-3xl border border-cmyk-key bg-paper-white p-6 shadow-hard sm:p-8">
           <div className="flex flex-col items-center gap-6 text-center sm:flex-row sm:items-start sm:text-left">
             {/* Avatar with Gradient border */}
-            <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-full border-2 border-cmyk-magenta p-1">
+            <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-full border-2 border-cmyk-magenta bg-white p-1">
               <div className="relative h-full w-full overflow-hidden rounded-full">
                 <Image
                   src="/assets/logo-square.jpg"
@@ -151,7 +261,7 @@ export default function InstagramFeed() {
             {/* Profile Info */}
             <div className="flex-1">
               <div className="flex flex-wrap items-center justify-center gap-4 sm:justify-start">
-                <h3 className="text-xl font-bold text-cmyk-key">tipografiaresta</h3>
+                <h3 className="text-xl font-bold text-cmyk-key">@{profileStats.username}</h3>
                 <a
                   href="https://www.instagram.com/tipografiaresta/"
                   target="_blank"
@@ -165,9 +275,9 @@ export default function InstagramFeed() {
 
               {/* Stats */}
               <div className="mt-4 flex justify-center gap-6 text-xs text-cmyk-key sm:justify-start sm:text-sm">
-                <span><strong>148</strong> post</span>
-                <span><strong>1.4k</strong> follower</span>
-                <span><strong>390</strong> seguiti</span>
+                <span><strong>148+</strong> post</span>
+                <span><strong>{profileStats.followers}</strong> follower</span>
+                <span><strong>{profileStats.following}</strong> seguiti</span>
               </div>
 
               {/* Bio */}
@@ -180,30 +290,37 @@ export default function InstagramFeed() {
                   rel="noopener noreferrer"
                   className="mt-1 inline-block font-semibold text-[#00376b] hover:underline"
                 >
-                  instagram.com/tipografiaresta
+                  instagram.com/{profileStats.username}
                 </a>
               </div>
             </div>
           </div>
         </div>
 
-        {/* 12-Post Responsive Instagram Grid */}
+        {/* 12-Post Live Instagram Grid */}
         <div className="mt-12 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
-          {posts.map((post) => (
+          {displayPosts.map((post) => (
             <div
               key={post.id}
               onClick={() => setSelectedPost(post)}
               className="group relative aspect-square cursor-pointer overflow-hidden border border-cmyk-key bg-paper-cream shadow-hard-sm transition-all duration-200 hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-hard"
             >
-              <Image
+              <img
                 src={post.src}
                 alt={post.alt}
-                fill
-                className="object-cover transition-transform duration-300 group-hover:scale-105"
+                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                loading="lazy"
               />
 
+              {/* Live Badge for real Instagram posts */}
+              {post.isLive && (
+                <div className="absolute right-2 top-2 z-10 flex h-6 w-6 items-center justify-center rounded-full bg-black/70 text-white backdrop-blur-sm">
+                  <Instagram className="h-3.5 w-3.5 text-cmyk-magenta" />
+                </div>
+              )}
+
               {/* Hover overlay with likes/comments */}
-              <div className="absolute inset-0 flex items-center justify-center gap-4 bg-black/60 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+              <div className="absolute inset-0 flex items-center justify-center gap-4 bg-black/65 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
                 <div className="flex items-center gap-1.5 text-xs font-bold text-white">
                   <Heart className="h-4 w-4 fill-white text-white" />
                   <span>{post.likes}</span>
@@ -252,17 +369,16 @@ export default function InstagramFeed() {
             </button>
 
             {/* Modal Image */}
-            <div className="relative aspect-square w-full md:w-3/5">
-              <Image
+            <div className="relative aspect-square w-full bg-black md:w-3/5">
+              <img
                 src={selectedPost.src}
                 alt={selectedPost.alt}
-                fill
-                className="object-contain md:object-cover"
+                className="h-full w-full object-contain"
               />
             </div>
 
             {/* Modal Details */}
-            <div className="flex flex-1 flex-col justify-between border-t border-cmyk-key/10 p-6 md:border-l md:border-t-0">
+            <div className="flex flex-1 flex-col justify-between overflow-y-auto border-t border-cmyk-key/10 p-6 md:border-l md:border-t-0">
               <div>
                 <div className="flex items-center gap-3">
                   <div className="relative h-10 w-10 overflow-hidden rounded-full border border-cmyk-magenta bg-white p-0.5">
@@ -274,24 +390,23 @@ export default function InstagramFeed() {
                   </div>
                 </div>
 
-                <h3 className="mt-4 font-serif text-lg font-bold text-cmyk-key">
-                  {selectedPost.title}
-                </h3>
-                <p className="mt-2 text-xs leading-relaxed text-cmyk-key/75">
-                  Realizzazione grafica e stampa a cura di Nuova Tipolitografia Resta a Bari.
-                </p>
+                <div className="mt-4 max-h-48 overflow-y-auto pr-1">
+                  <p className="whitespace-pre-line text-xs leading-relaxed text-cmyk-key/85">
+                    {selectedPost.caption || selectedPost.title}
+                  </p>
+                </div>
               </div>
 
               <div className="mt-6 border-t border-cmyk-key/15 pt-4">
                 <div className="flex items-center justify-between text-xs text-cmyk-key">
                   <span className="font-semibold">{selectedPost.likes} "Mi piace"</span>
                   <a
-                    href="https://www.instagram.com/tipografiaresta/"
+                    href={selectedPost.permalink}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1 font-bold text-[#0095f6] hover:underline"
                   >
-                    <span>Vedi su Instagram</span>
+                    <span>Vedi post su Instagram</span>
                     <ExternalLink className="h-3 w-3" />
                   </a>
                 </div>
