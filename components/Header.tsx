@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Menu, X, ArrowRight, Printer, Boxes } from "lucide-react";
+import { Menu, X, ArrowRight, Printer } from "lucide-react";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -46,14 +46,7 @@ export default function Header() {
         </nav>
 
         {/* Desktop CTA Button */}
-        <div className="hidden items-center gap-3 md:flex">
-          <Link
-            href="/magazzino"
-            className="inline-flex items-center gap-1.5 border border-cmyk-key bg-[#111111] px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-hard-sm transition hover:-translate-x-0.5 hover:-translate-y-0.5 hover:bg-[#ff007f] hover:shadow-hard active:translate-x-0 active:translate-y-0"
-          >
-            <Boxes className="h-4 w-4 text-[#00e5ff]" />
-            <span>Magazzino IA</span>
-          </Link>
+        <div className="hidden items-center gap-4 md:flex">
           <Link
             href="#preventivo"
             className="inline-flex items-center gap-2 border border-cmyk-key bg-cmyk-cyan px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-black shadow-hard-sm transition hover:-translate-x-0.5 hover:-translate-y-0.5 hover:bg-cmyk-yellow hover:shadow-hard active:translate-x-0 active:translate-y-0"
@@ -87,15 +80,7 @@ export default function Header() {
                 {link.label}
               </Link>
             ))}
-            <div className="pt-2 space-y-2">
-              <Link
-                href="/magazzino"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex w-full items-center justify-center gap-2 border border-cmyk-key bg-[#111111] py-3 text-xs font-bold uppercase tracking-wider text-white shadow-hard-sm"
-              >
-                <Boxes className="h-4 w-4 text-[#00e5ff]" />
-                <span>Magazzino Virtuale IA</span>
-              </Link>
+            <div className="pt-2">
               <Link
                 href="#preventivo"
                 onClick={() => setMobileMenuOpen(false)}
