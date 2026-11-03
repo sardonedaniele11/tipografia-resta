@@ -1,4 +1,5 @@
 import React from "react";
+import CalendarAlert from "@/components/CalendarAlert";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import InfoBanner from "@/components/InfoBanner";
@@ -12,6 +13,9 @@ import Footer from "@/components/Footer";
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col">
+      {/* Banner temporaneo per prenotazione calendari (rimuovere o commentare la riga sotto quando termina la promozione) */}
+      <CalendarAlert />
+
       <Header />
       <Hero />
       <InfoBanner />
