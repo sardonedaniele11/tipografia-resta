@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Plus_Jakarta_Sans, Courier_Prime } from "next/font/google";
 import "./globals.css";
+import CookieBanner from "@/components/CookieBanner";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -62,6 +63,9 @@ export default function RootLayout({
         <div className="crop-mark crop-bottom-right" aria-hidden="true" />
 
         {children}
+
+        {/* Banner Informativo Cookie e Privacy a norma di legge */}
+        <CookieBanner />
       </body>
     </html>
   );

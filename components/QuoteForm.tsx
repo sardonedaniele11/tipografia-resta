@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { Send, Upload, CheckCircle2, AlertCircle, Loader2, Mail, MessageSquare } from "lucide-react";
 
 export default function QuoteForm() {
@@ -277,15 +278,23 @@ export default function QuoteForm() {
                 </div>
 
                 {/* Privacy checkbox */}
-                <div className="flex items-center gap-2">
+                <div className="flex items-start gap-2.5">
                   <input
                     type="checkbox"
                     id="privacy"
                     required
-                    className="h-4 w-4 border-cmyk-key text-cmyk-cyan focus:ring-cmyk-cyan"
+                    className="mt-0.5 h-4 w-4 border-cmyk-key text-cmyk-cyan focus:ring-cmyk-cyan"
                   />
-                  <label htmlFor="privacy" className="text-xs text-cmyk-key/80">
-                    Acconsento al trattamento dei dati personali ai sensi del GDPR. *
+                  <label htmlFor="privacy" className="text-xs leading-normal text-cmyk-key/80">
+                    Dichiaro di aver letto e compreso l&apos;informativa sulla{" "}
+                    <Link
+                      href="/privacy-policy"
+                      target="_blank"
+                      className="font-bold text-cmyk-magenta underline hover:text-black"
+                    >
+                      Privacy Policy
+                    </Link>{" "}
+                    e acconsento al trattamento dei dati personali ai sensi del GDPR per la gestione della richiesta di preventivo. *
                   </label>
                 </div>
 
